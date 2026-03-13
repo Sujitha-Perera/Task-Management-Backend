@@ -11,45 +11,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
-    // Register new user
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-
         try {
-
             String message = authService.register(request);
-
             return ResponseEntity.ok().body(message);
-
         } catch (RuntimeException ex) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(ex.getMessage());
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 
-    // Login user
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-
         try {
-
             AuthResponse response = authService.login(request);
-
             return ResponseEntity.ok(response);
-
         } catch (RuntimeException ex) {
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(ex.getMessage());
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 }

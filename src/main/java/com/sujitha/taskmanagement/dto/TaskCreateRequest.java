@@ -23,4 +23,7 @@ public class TaskCreateRequest {
     private TaskPriority priority;
 
     private LocalDate dueDate;
+
+    // Admin-only: assign task to a specific user email
+    private String assignedUserEmail;
 }

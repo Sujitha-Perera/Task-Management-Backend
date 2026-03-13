@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -24,56 +26,49 @@ public class TaskController {
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(
             @Valid @RequestBody TaskCreateRequest request,
-            @RequestHeader("X-User-Email") String userEmail
-    ) {
-        return ResponseEntity.ok(taskService.createTask(request, userEmail));
+            Principal principal) {
+        return ResponseEntity.ok(taskService.createTask(request, principal.getName()));
     }
 
     @GetMapping
     public ResponseEntity<Page<TaskResponse>> getTasks(
-            @RequestHeader("X-User-Email") String userEmail,
+            Principal principal,
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) TaskPriority priority,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "dueDate") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
-    ) {
+            @RequestParam(defaultValue = "asc") String direction) {
         return ResponseEntity.ok(
-                taskService.getTasks(userEmail, status, priority, page, size, sortBy, direction)
-        );
+                taskService.getTasks(principal.getName(), status, priority, page, size, sortBy, direction));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getTaskById(
             @PathVariable Long id,
-            @RequestHeader("X-User-Email") String userEmail
-    ) {
-        return ResponseEntity.ok(taskService.getTaskById(id, userEmail));
+            Principal principal) {
+        return ResponseEntity.ok(taskService.getTaskById(id, principal.getName()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> updateTask(
             @PathVariable Long id,
             @Valid @RequestBody TaskUpdateRequest request,
-            @RequestHeader("X-User-Email") String userEmail
-    ) {
-        return ResponseEntity.ok(taskService.updateTask(id, request, userEmail));
+            Principal principal) {
+        return ResponseEntity.ok(taskService.updateTask(id, request, principal.getName()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTask(
             @PathVariable Long id,
-            @RequestHeader("X-User-Email") String userEmail
-    ) {
-        return ResponseEntity.ok(taskService.deleteTask(id, userEmail));
+            Principal principal) {
+        return ResponseEntity.ok(taskService.deleteTask(id, principal.getName()));
     }
 
     @PatchMapping("/{id}/complete")
     public ResponseEntity<TaskResponse> markTaskComplete(
             @PathVariable Long id,
-            @RequestHeader("X-User-Email") String userEmail
-    ) {
-        return ResponseEntity.ok(taskService.markTaskComplete(id, userEmail));
+            Principal principal) {
+        return ResponseEntity.ok(taskService.markTaskComplete(id, principal.getName()));
     }
 }

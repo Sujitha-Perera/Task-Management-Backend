@@ -28,8 +28,17 @@ public class TaskService {
 
     public TaskResponse createTask(TaskCreateRequest request, String userEmail) {
 
-        User user = userRepository.findByEmail(userEmail)
+        User requestingUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // Admin can assign task to another user via assignedUserEmail
+        User taskOwner = requestingUser;
+        if (requestingUser.getRole() == Role.ADMIN
+                && request.getAssignedUserEmail() != null
+                && !request.getAssignedUserEmail().isBlank()) {
+            taskOwner = userRepository.findByEmail(request.getAssignedUserEmail())
+                    .orElseThrow(() -> new ResourceNotFoundException("Assigned user not found"));
+        }
 
         Task task = new Task();
         task.setTitle(request.getTitle());
@@ -37,7 +46,7 @@ public class TaskService {
         task.setStatus(request.getStatus());
         task.setPriority(request.getPriority());
         task.setDueDate(request.getDueDate());
-        task.setUser(user);
+        task.setUser(taskOwner);
 
         Task savedTask = taskRepository.save(task);
 
@@ -45,12 +54,12 @@ public class TaskService {
     }
 
     public Page<TaskResponse> getTasks(String userEmail,
-                                       TaskStatus status,
-                                       TaskPriority priority,
-                                       int page,
-                                       int size,
-                                       String sortBy,
-                                       String direction) {
+            TaskStatus status,
+            TaskPriority priority,
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
 
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -172,7 +181,7 @@ public class TaskService {
                 task.getDueDate(),
                 task.getCreatedAt(),
                 task.getUpdatedAt(),
-                task.getUser().getEmail()
-        );
+                task.getUser().getEmail(),
+                task.getUser().getName());
     }
 }

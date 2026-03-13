@@ -17,13 +17,14 @@ public class TaskResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String userEmail;
+    private String userName;
 
     public TaskResponse() {
     }
 
     public TaskResponse(Long id, String title, String description, TaskStatus status,
-                        TaskPriority priority, LocalDate dueDate,
-                        LocalDateTime createdAt, LocalDateTime updatedAt, String userEmail) {
+            TaskPriority priority, LocalDate dueDate,
+            LocalDateTime createdAt, LocalDateTime updatedAt, String userEmail, String userName) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -33,6 +34,7 @@ public class TaskResponse {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.userEmail = userEmail;
+        this.userName = userName;
     }
 
     public Long getId() {
@@ -105,5 +107,13 @@ public class TaskResponse {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
