@@ -95,11 +95,14 @@
 			<version>0.12.7</version>
 			<scope>runtime</scope>
 		</dependency>
+<<<<<<< HEAD
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.5.0</version>
 		</dependency>
+=======
+>>>>>>> 97d995b822f26d7fecf83857f5fb9b70a7162b14
 	</dependencies>
 
 	<build>
